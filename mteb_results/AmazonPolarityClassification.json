@@ -1,0 +1,15 @@
+{
+  "dataset_revision": "e2d317d38cd51312af73b3d32a06d1a08b442046",
+  "mteb_dataset_name": "AmazonPolarityClassification",
+  "mteb_version": "1.1.0",
+  "test": {
+    "accuracy": 0.8689837499999999,
+    "accuracy_stderr": 0.010742354621427285,
+    "ap": 0.8239500885672127,
+    "ap_stderr": 0.013236818266475252,
+    "evaluation_time": 1082.95,
+    "f1": 0.8687317947399658,
+    "f1_stderr": 0.011035411217540664,
+    "main_score": 0.8689837499999999
+  }
+}

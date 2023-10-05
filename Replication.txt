@@ -1,0 +1,40 @@
+Lodestone Replication
+
+The dataloading, library modification, model preparation, and training process can be replicated in a straightforward manner by simply running a few Jupyter notebooks and Python files.
+
+Data Wrangling and Loading
+
+Dataloading.ipynb utilizes the contents of the GoogleSheets_datasets.tsv and HuggingFace_datasets.tsv to fetch data from various URLs provided by the original distilroberta team to their curated datasets in cloud storage. The data is then streamed directly into the data folder of the lodestone-rnd S3 bucket in us-east-1. In addition to the data used by the distilroberta team and provided at https://docs.google.com/spreadsheets/d/1vXJrIg38cEaKjOG5y4I4PQwAQFUmCkohbViJ9zj_Emg/edit#gid=0, data was also collected from https://huggingface.co/datasets/sentence-transformers/embedding-training-data and the following HuggingFace dataset repositories:
+Stack Exchange
+https://huggingface.co/datasets/flax-sentence-embeddings/stackexchange_title_body_jsonl
+https://huggingface.co/datasets/flax-sentence-embeddings/stackexchange_titlebody_best_voted_answer_jsonl
+https://huggingface.co/datasets/flax-sentence-embeddings/stackexchange_title_best_voted_answer_jsonl
+https://huggingface.co/datasets/flax-sentence-embeddings/stackexchange_titlebody_best_and_down_voted_answer_jsonl
+Reddit
+https://huggingface.co/datasets/sentence-transformers/reddit-title-body
+All of the HuggingFace data is handled remotely or pulled via the script in Dataloading.ipynb, so the only files required for this entire process are Dataloading.ipynb, GoogleSheets_datasets.tsv, and HuggingFace_datasets.tsv. Running this notebook results in 679 objects and 310.5GB of data being loaded into S3.
+
+Once the data is in S3, run Data_Records.ipynb to generate the data_records.json file which contains a dictionary of {filename: record count} pairs and is used throughout the Training.py script.
+
+Library and Model Preparation
+
+In order to run the training process with our specific model, we need to make a few custom modifications to the sentence-transformers library and to the config.json file of the mosaic-bert-base-seqlen-2048 base model.
+
+To alter the sentence-transformers library, clone the repository from https://github.com/UKPLab/sentence-transformers locally and replace the SentenceTransformer.py and Transformer.py files located within the sentence-transformers/sentence_transformers/ and sentence-transformers/sentence_transformers/models/ directories of the cloned repository, respectively, with those located inside dev/ folder. (This has already been done in this notebook instance, but this will have to be completed if training on another system.)
+
+Before conducting actual training, we also need to clone the mosaic-bert-base-seqlen-2048 model locally and make a few small changes to its config.json file. Running Mosaic_Model.ipynb will execute this process and get our model ready to begin training. (Again, this has already been done in this notebook instance, but this will have to be completed if training on another system.)
+
+Training
+
+To perform the final training run, open a SageMaker Terminal window and execute the following:
+cd SageMaker
+screen -S training
+python Training.py
+^a d (that is, Ctrl + a, then d)
+
+To reattach to the screen and observe how training is progressing, run `screen -r training` in the Terminal. Occasionally epochs may stall and require manual intervention to kickstart the process again. Pressing ^c (that is, Ctrl+c) inside the screen should suffice the get things going again, but this action will automatically cause the currently stalled epoch to fail and for the training to proceed to the next epoch or data chunk without updating the existing model parameterization. Epoch successes and failures and the cumulative number of successfully completed steps can be monitored via the train_logs.txt file which is updated automatically throughout the course of training.
+
+The Training.py file can be reconfigured such that training hyperparameters could be passed in through the command line, but, at present, hyperparameters should be set within the file before running it.
+
+This concludes the steps required for replication of the Lodestone training process.
+

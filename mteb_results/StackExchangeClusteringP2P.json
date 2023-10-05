@@ -1,0 +1,10 @@
+{
+  "dataset_revision": "815ca46b2622cec33ccafc3735d572c266efdb44",
+  "mteb_dataset_name": "StackExchangeClusteringP2P",
+  "mteb_version": "1.1.0",
+  "test": {
+    "evaluation_time": 475.7,
+    "v_measure": 0.32107791216468773,
+    "v_measure_std": 0.017571978205477096
+  }
+}

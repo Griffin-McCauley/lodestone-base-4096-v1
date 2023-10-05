@@ -1,0 +1,10 @@
+{
+  "dataset_revision": "282350215ef01743dc01b456c7f5241fa8937f16",
+  "mteb_dataset_name": "RedditClusteringP2P",
+  "mteb_version": "1.1.0",
+  "test": {
+    "evaluation_time": 1202.29,
+    "v_measure": 0.55024711941649,
+    "v_measure_std": 0.12775990781233748
+  }
+}
